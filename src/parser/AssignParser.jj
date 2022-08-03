@@ -1,0 +1,166 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  static = true;
+}
+
+PARSER_BEGIN(AssignParser)
+package parser;
+import expression.*;
+
+public class AssignParser
+{
+  public static void main(String args []) throws ParseException
+  {
+    AssignParser parser = new AssignParser(System.in);
+	
+	
+    
+  }
+}
+
+PARSER_END(AssignParser)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : /* OPERATORS */
+{
+  < PLUS : "+" >
+| < MINUS : "-" >
+| < MULTIPLY : "*" >
+| < DIVIDE : "/" >
+}
+
+
+
+TOKEN :
+{
+  < #LETTER : ["a"-"z" , "A"-"Z"] >
+| < CONSTANT : (< DIGIT >)+ >
+| < #DIGIT : [ "0"-"9" ] >
+}
+
+TOKEN :
+{
+  < IDENTIFIER  : < LETTER > (< LETTER > | < DIGIT >)* >
+}
+
+
+
+
+
+ASTExpression one_line() :
+{
+  ASTExpression left;
+  ASTExpression right;
+  ASTExpression assignExpression;
+}
+{
+  left = variable()
+  (    "=" right = value()
+	{
+	  assignExpression = new AssignExpression(left, right);
+	  return assignExpression;
+	}
+  |
+    {
+      return left;
+    }
+  )
+}
+
+ASTExpression value():
+{
+  ASTExpression v;
+  Token t;
+}
+{
+  t = < IDENTIFIER >
+  {
+	v = new ValueExpression(t.image);
+	return v;
+  }
+|
+  t = < CONSTANT >
+  {
+	v = new ValueExpression(Integer.parseInt(t.image));
+	return v; 
+  }
+}
+
+
+void sum() :
+{}
+{
+  term()
+  (
+    (
+      < PLUS >
+    | < MINUS >
+    )
+    term()
+  )*
+}
+
+void term() :
+{}
+{
+  unary()
+  (
+    (
+      < MULTIPLY >
+    | < DIVIDE >
+    )
+    unary()
+  )*
+}
+
+void unary() :
+{}
+{
+  < MINUS > element()
+| element()
+}
+
+void element() :
+{}
+{
+  < CONSTANT >
+| "(" sum() ")"
+}
+
+ASTExpression variable():
+{
+  Token t;
+  ASTExpression var;
+}
+{
+  "$" t = < IDENTIFIER > 
+  {
+	var = new BaseVariableExpression(t.image);
+  }
+  (
+    "." t= < IDENTIFIER >
+    {
+      ASTExpression v = var; 
+      var = new ClassVariableExpression(v, t.image);
+    }
+  )*
+  {
+    return var;
+  }
+}
+
+
+
+
+
+
