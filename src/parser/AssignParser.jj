@@ -65,7 +65,7 @@ ASTExpression one_line() :
 }
 {
   left = variable()
-  (    "=" right = value()
+  (    "=" right = sum()
 	{
 	  assignExpression = new AssignExpression(left, right);
 	  return assignExpression;
@@ -77,65 +77,97 @@ ASTExpression one_line() :
   )
 }
 
-ASTExpression value():
+ASTExpression sum() :
 {
-  ASTExpression v;
+  Token t;
+  ASTExpression left;
+  ASTExpression right;
+  ASTExpression operator;
+}
+{
+  left = term()
+  (
+    (
+      t = < PLUS >
+    | t =< MINUS >
+    )
+    right = term()
+    {
+      operator = new OperatorExpression(left, right, t.image);
+      left = operator;
+    }
+  )*
+  {
+	return left;
+  }
+}
+
+ASTExpression term() :
+{
+  ASTExpression left;
+  ASTExpression right;
+  ASTExpression operator;
   Token t;
 }
 {
-  t = < IDENTIFIER >
+  left = unary()
+  (
+    (
+      t = < MULTIPLY >      
+    | t = < DIVIDE >
+    )
+    right = unary()
+    {
+      operator = new OperatorExpression(left, right, t.image);
+      left = operator;
+    }
+  )*
   {
-	v = new ValueExpression(t.image);
-	return v;
+	return left;
   }
-|
+}
+
+ASTExpression unary() :
+{
+  ASTExpression result;
+}
+{
+  < MINUS > result = element()
+  {
+    return new OperatorExpression(new ValueIntegerExpression(0), result, OperatorExpression.MINUS);
+  }
+| result = element()
+  {
+    return result;
+  }
+}
+
+ASTExpression element() :
+{
+  Token t;
+  ASTExpression result;
+}
+{
   t = < CONSTANT >
   {
-	v = new ValueExpression(Integer.parseInt(t.image));
-	return v; 
+	result = new ValueIntegerExpression(Integer.parseInt(t.image));
+	return result;
+  }
+| "(" result = sum() ")"
+  {
+    return result;
+  }
+| t = < IDENTIFIER >
+  {
+	result = new ValueStringExpression(t.image);
+	return result;
+  }
+| result = variable()
+  {
+	return result;
   }
 }
 
-
-void sum() :
-{}
-{
-  term()
-  (
-    (
-      < PLUS >
-    | < MINUS >
-    )
-    term()
-  )*
-}
-
-void term() :
-{}
-{
-  unary()
-  (
-    (
-      < MULTIPLY >
-    | < DIVIDE >
-    )
-    unary()
-  )*
-}
-
-void unary() :
-{}
-{
-  < MINUS > element()
-| element()
-}
-
-void element() :
-{}
-{
-  < CONSTANT >
-| "(" sum() ")"
-}
 
 ASTExpression variable():
 {

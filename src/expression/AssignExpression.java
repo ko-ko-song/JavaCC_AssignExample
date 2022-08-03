@@ -5,11 +5,11 @@ import core.ASTVisitor;
 public class AssignExpression implements ASTExpression{
 
 	private ClassVariableExpression left;
-	private ValueExpression right;
+	private ASTExpression right;
 	
 	public AssignExpression(ASTExpression left, ASTExpression right) {
 		this.left = (ClassVariableExpression)left;
-		this.right = (ValueExpression)right;
+		this.right = (ASTExpression)right;
 	}
 	
 	public ASTExpression left() {

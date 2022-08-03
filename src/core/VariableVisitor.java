@@ -6,7 +6,10 @@ import java.util.Map;
 import expression.AssignExpression;
 import expression.BaseVariableExpression;
 import expression.ClassVariableExpression;
+import expression.OperatorExpression;
 import expression.ValueExpression;
+import expression.ValueIntegerExpression;
+import expression.ValueStringExpression;
 
 
 public class VariableVisitor implements ASTVisitor{
@@ -57,7 +60,25 @@ public class VariableVisitor implements ASTVisitor{
 	}
 
 	@Override
-	public Object visit(ValueExpression valueExpression) {
+	public Object visit(ValueStringExpression string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(OperatorExpression operator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(ValueIntegerExpression integer) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(ValueExpression value) {
 		// TODO Auto-generated method stub
 		return null;
 	}

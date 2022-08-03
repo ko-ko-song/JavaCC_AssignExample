@@ -1,13 +1,19 @@
 package core;
 
+import expression.OperatorExpression;
+import expression.ValueExpression;
 import expression.AssignExpression;
 import expression.BaseVariableExpression;
 import expression.ClassVariableExpression;
-import expression.ValueExpression;
+import expression.ValueIntegerExpression;
+import expression.ValueStringExpression;
 
 public interface ASTVisitor {
-	Object visit(ClassVariableExpression classVarExpression);
-	Object visit(BaseVariableExpression baseVarExpression);
-	Object visit(AssignExpression assignExpression);
-	Object visit(ValueExpression valueExpression);
+	Object visit(ClassVariableExpression classVar);
+	Object visit(BaseVariableExpression baseVar);
+	Object visit(AssignExpression assign);
+	Object visit(ValueIntegerExpression integer);
+	Object visit(ValueStringExpression string);
+	Object visit(OperatorExpression operator);
+	Object visit(ValueExpression value);
 }

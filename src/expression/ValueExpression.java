@@ -4,23 +4,22 @@ import core.ASTVisitor;
 
 public class ValueExpression implements ASTExpression{
 
-	private Object value;
+	public ValueExpression value;
 	
-	public ValueExpression(Object value) {
-		this.value = value;
+	public ValueExpression() {
+		value = null;
 	}
 	
-	public Object getValue() {
-		return value;
+	public ValueExpression(String s) {
+		this.value = new ValueStringExpression(s);
 	}
 
-	public void setValue(Object value) {
-		this.value = value;
+	public ValueExpression(int i) {
+		this.value = new ValueStringExpression(i);
 	}
-
+	
 	@Override
 	public Object accept(ASTVisitor visitor) {
 		return visitor.visit(this);
 	}
-
 }
